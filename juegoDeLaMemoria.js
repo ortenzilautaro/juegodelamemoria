@@ -14,6 +14,7 @@ const jugadores =[] //Acá estan los jugadores que terminaron el juego con los i
 //Declaro una funcion donde ingresa el nombre del jugador
 const datosJugador= (nombre)=>{
     nombre = prompt(`Ingrese su nombre`).toLocaleUpperCase()
+    alert (`Bienvenido al juego de la memoria ${nombre}`)
     return nombre
 }
 
