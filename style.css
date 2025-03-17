@@ -1,0 +1,135 @@
+*{
+    margin: 0;
+    padding: 0;
+}
+
+body{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    background-color: black;
+}
+
+main{
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+
+h1{
+color: white;
+}
+
+/* Clases para usar en JS */
+
+.mesa{ /* Section donde está el juego */
+    background-color: darkgreen;
+    width: 75%;
+    height: 90vh;
+    border: 4px solid orange;
+    display: flex;
+    flex-direction: column;
+    justify-content: start;
+    align-items: center;
+}
+
+.inicio{ /* Div del nombre del jugador */
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+}
+
+.datos{ /* Datos del jugador, nombre y turno*/
+    height: 10px;
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    justify-content:space-between;
+    align-items: start;
+}
+
+.datos h2{
+    margin: 10px;
+}
+
+.datos h3{
+    margin: 10px;
+}
+
+.imagen-cartas-visibles{ /* Imagenes de las cartas */
+    display: flex;
+    height: 100px;
+    width: 100px;;
+    flex-wrap: wrap;
+}
+
+.div-imagen-cartas-escondidas{ /*Div cartas al revés */
+    display: flex;
+    flex-wrap: wrap;
+    width: 100px;
+    height: 100px;
+    background-color: black;
+    border: 3px solid gray;
+    margin: 5px;
+}
+
+.bloqueo{ /* Bloqueo de evento */
+    pointer-events: none;
+}
+
+.organizacion{ /* Div de todas las cartas*/
+    height: 100%;
+    width: 100%;
+    display: flex;
+    flex-wrap: wrap;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+}
+
+.parrafo{ /* Comentarios del juego */
+    position: absolute;
+    height: 90vh;
+    justify-content: end;
+    display: flex;
+    align-items: end;
+    pointer-events: none;
+    font-size: large;
+}
+
+#ranking{ /* Section del ranking */
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    background-color: white;
+    margin: 20px;
+    height: 100%;
+    width: 75%;
+}
+
+#tabla-jugadores{ /* Div de la tabla de jugadores*/
+    width: 100%;
+    margin: 5px;
+}
+
+.jugador{ /* Div de cada jugador que agregamos al tablero*/
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    align-items: center;
+    width: 100%;
+    margin: 5px;
+}
+
+.jugador p{
+    width: 33%;
+    align-items: center;
+    display: flex;
+    justify-content: center;
+}

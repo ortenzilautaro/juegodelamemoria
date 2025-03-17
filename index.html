@@ -3,9 +3,32 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Juego de la memoria</title>
+    <title>Document</title>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
+    <header>
+        <h1>Bienvenidos al juego de la memoria</h1>
+    </header>
+    <main>
+        <section id="tablero" class="mesa">
+            <div id="datos-del-juego" class="datos"> 
+            <!-- aca iria nombre-dato y turno-dato lo de arriba como h2 y h3 desde JS-->
+            </div>
+            <!-- creamos otro div para datos ingresados -->
+            <!-- Agregar div desde JS de las cartas -->
+        </section>
+        <section id="ranking">
+            <h2>Ranking</h2>
+            <div id="tabla-jugadores">
+                <div class="jugador">
+                    <p>Posición</p>
+                    <p>Nombre</p>
+                    <p>Cantidad de turnos</p>
+                </div>
+                <!-- Agregar 3 parrafos con nro index, nombre y turno de los jugadores dentro de un DIV -->
+            </div>
+        </section>
+    </main>
     <script src="juegoDeLaMemoria.js"></script>
 </body>
-</html>
