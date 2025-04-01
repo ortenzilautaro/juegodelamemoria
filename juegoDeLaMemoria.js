@@ -1,5 +1,5 @@
 // Declaro variables, constantes y arrays
-
+const cartasJson= "./cartas.json"
 const tablero = document.getElementById("tablero")
 const boton = document.getElementById("boton")
 const comentario = document.createElement("p")
@@ -10,25 +10,46 @@ const nombres = []
 const ranking = JSON.parse(localStorage.getItem(`ranking`)) || []
 
 // Objeto que almacena el nombre y las imágenes de las cartas
-const imagenesCartas = [
-    {nombre: "Homero", src: "https://e7.pngegg.com/pngimages/899/333/png-clipart-homer-simpson-bart-simpson-lisa-simpson-maggie-simpson-sideshow-bob-bart-simpson-homer-simpson-bart-simpson.png"},
-    {nombre: "Marge", src: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQodKaiI3rnAE6_nVUr8wMnExj85RAnDf-fVA&s"},
-    {nombre: "Maggie", src: "https://i.pinimg.com/474x/96/33/1b/96331b3790fa4d64549374cab5670209.jpg"},
-    {nombre: "Lisa", src: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRpaJZquLmxh8KFoAQRcRU5FYmkivBcgwvt9Q&s"},
-    {nombre: "Bart", src: "https://w7.pngwing.com/pngs/506/281/png-transparent-bart-simpson-s-guide-to-life-homer-simpson-marge-simpson-maggie-simpson-bart-simpson-bart-simpson-illustration-kids-funny-fictional-character-thumbnail.png"},
-    {nombre: "Homero", src: "https://e7.pngegg.com/pngimages/899/333/png-clipart-homer-simpson-bart-simpson-lisa-simpson-maggie-simpson-sideshow-bob-bart-simpson-homer-simpson-bart-simpson.png"},
-    {nombre: "Marge", src: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQodKaiI3rnAE6_nVUr8wMnExj85RAnDf-fVA&s"},
-    {nombre: "Maggie", src: "https://i.pinimg.com/474x/96/33/1b/96331b3790fa4d64549374cab5670209.jpg"},
-    {nombre: "Lisa", src: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRpaJZquLmxh8KFoAQRcRU5FYmkivBcgwvt9Q&s"},
-    {nombre: "Bart", src: "https://w7.pngwing.com/pngs/506/281/png-transparent-bart-simpson-s-guide-to-life-homer-simpson-marge-simpson-maggie-simpson-bart-simpson-bart-simpson-illustration-kids-funny-fictional-character-thumbnail.png"}
-];
+const imagenesCartas = []
 
-// Creo funcion que me edite el parrafo en el juego (ejemplo: "Ese nombre no es válido")
-const CrearComentario = (elemento, texto, colorElegido)=>{
+// Creo funcion para  crear un toastify con el texto que quiero (ejemplo: nombre inválido)
+const notificar = (texto)=>{
+    Toastify({
+        text: `${texto}`,
+        backgroundColor: "red",
+        duration: 3000
+        }).showToast();
+}
+
+// Creo funcion que me edite el parrafo en el juego (ejemplo: "Acertaste!")
+const crearComentario = (elemento, texto, colorElegido)=>{
     comentario.textContent=`${texto}`
-    comentario.style.color=`${colorElegido}`
+    comentario.style.color= `${colorElegido}`
     comentario.classList.add("parrafo")
     elemento.appendChild(comentario)
+    setTimeout(()=>{
+        comentario.remove()
+    }, 3000)
+}
+
+//Creo la funcion async para pedir imagenes de las cartas
+
+async function pedirCartas() {
+    try{
+    const pedirDatosCartas = await fetch(cartasJson)
+    const datoCartaJson = await pedirDatosCartas.json()
+    datoCartaJson.forEach((objeto)=>{
+        imagenesCartas.push(objeto)
+    })
+    } catch(error){
+        console.error (`Tiro un error`+ error) // ingresar foto de gatito error 404
+        tablero.innerHTML=""
+        const error404 = document.createElement("img")
+        error404.setAttribute("src", `https://previews.123rf.com/images/ssstocker/ssstocker2301/ssstocker230100103/196576852-p%C3%A1gina-de-error-del-gato-gatito-dormido-en-una-caja-con-el-signo-404-p%C3%A1ginas-vac%C3%ADas-no-encontradas.jpg`)
+        error404.setAttribute("alt", "Error 404")
+        error404.classList.add(`error`)
+        tablero.appendChild(error404)
+    }
 }
 
 // Creo funcion para la eleccion de las cartas
@@ -68,13 +89,13 @@ const elegirCarta = (eleccion) => {
 
         // Si las 2 cartas tienen el mismo ALT se ejecuta el código (es imposible q las 2 sean la misma carta, ya que antes verifique que no se pueda proceda el código sin clickear una que no sea visible)
         if (carta1 === carta2) {
-            CrearComentario(tablero, `Muy bien! acertaste un par de cartas`, `white`)
+            crearComentario(tablero, `Muy bien! acertaste un par de cartas`, `white`)
             cartasAdivinadas.push(carta1)
             cartasAdivinadas.push(carta2)
             cartaElegida = [];
             tablero.classList.remove("bloqueo") //Elimino el bloqueo del tablero así se puede clickear
         } else { // Si no son iguales se ejecuta otro código
-            CrearComentario(tablero, `Las cartas no son iguales`, `red`)
+            crearComentario(tablero, `Las cartas no son iguales, intenta otra vez`, `red`)
             setTimeout(() => {
                 cartaElegida.forEach(carta => {
                     carta.remove(); // Eliminamos la imagen si no coinciden
@@ -87,6 +108,7 @@ const elegirCarta = (eleccion) => {
     // Por último si ya tengo las 10 cartasAdivinadas con 10 elementos se ejecuta el siguiente código
     if(cartasAdivinadas.length=== 10){
         setTimeout(()=>{
+        comentario.remove()
         ranking.push({nombre:nombres[nombres.length-1],turno:turno}) //Pusheo en ranking para dsp añadirlo
         tablaRanking() //Ejecuto función de ranking
         localStorage.setItem(`ranking`, JSON.stringify(ranking)) // Guardo el localstorage
@@ -99,7 +121,7 @@ const elegirCarta = (eleccion) => {
 }
 // Acá esta lo que sigue del código anterior, si el div tiene una img, se ejecuta este código
 else{
-    CrearComentario(tablero, `No puede elegir una carta visible`, `red`)}
+    notificar(`No puede elegir una carta ya visible`)}
 };
 
 // Creo funcion donde se crean las cartas una vez que se apreta el botón JUGAR
@@ -155,7 +177,6 @@ const jugar = ()=>{
         tableroInicialBoton.addEventListener("click",()=>{
         const nombre = tableroInicialInput.value.toUpperCase().trim() //Añadi métodos para que el nombre siempre sea en mayuscula y trim para que no acepte espacio como nombre
         if(nombre !== `` && !ranking.some((e)=>e.nombre === nombre)){ //Puse un IF para que no me acepte nombres vacios y que no haya 2 nombres iguales
-        comentario.remove()
         nombres.push(nombre)
 
         const datosIngresados = document.getElementById("datos-ingresados")
@@ -175,7 +196,7 @@ const jugar = ()=>{
 
         crearCartas()
         } else {
-        CrearComentario(tablero, `Ese nombre ya está en uso ó usaste un nombre vacio`, `red`)
+        notificar(`Ese nombre ya está en uso ó usaste un nombre vacio`)
         }
     })
 }
@@ -185,8 +206,6 @@ const volverAJugar= ()=>{
     while(tablero.querySelector("div")){ //Elimino todo lo que está dentro del div "tablero", ya que no se utiliza más
         tablero.firstChild.remove()
     }
-
-    comentario.remove()
 
     const divBotonYTexto = document.createElement("div")
     const textoFinalPartida = document.createElement("h2")
@@ -242,6 +261,7 @@ const tablaRanking = ()=>{
 const juegoDeLaMemoria = ()=>{
     jugar()
     tablaRanking()
+    pedirCartas()
 }
 
 // Ejecución de código
